@@ -10,14 +10,7 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-}
-
-provider "aws" {
-  alias  = "ohio"
-  region = "us-east-2"
-}
-
-provider "aws" {
-  alias  = "california"
-  region = "us-west-1"
+  default_tags {
+    tags = var.tags
+  }
 }
