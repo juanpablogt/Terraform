@@ -1,0 +1,5 @@
+resource "aws_instance" "public_instance" {
+  ami           = "ami-0332d564d76dbd8d6"
+  instance_type = "t2.micro"
+  subnet_id     = aws_subnet.public_subnet_virginia.id
+}
