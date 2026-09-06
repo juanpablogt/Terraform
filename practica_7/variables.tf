@@ -1,6 +1,6 @@
 variable "virginia_cidr" {
-    description = "CIDR_Virginia"
-    type        = string
+  description = "CIDR_Virginia"
+  type        = string
 }
 
 # variable "private_subnet_cidr" {
@@ -14,11 +14,11 @@ variable "virginia_cidr" {
 # }
 
 variable "subnets" {
-    description = "Lista de subnets"
-    type        = list(string)
+  description = "Lista de subnets"
+  type        = list(string)
 }
 
 variable "tags" {
-    description = "Tags para los recursos"
-    type        = map(string)
+  description = "Tags para los recursos"
+  type        = map(string)
 }
