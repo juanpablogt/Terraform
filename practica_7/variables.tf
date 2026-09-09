@@ -22,3 +22,7 @@ variable "tags" {
   description = "Tags para los recursos"
   type        = map(string)
 }
+variable "ingress_cidr" {
+  description = "CIDR para reglas de ingreso"
+  type        = string
+}
