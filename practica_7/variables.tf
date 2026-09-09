@@ -26,3 +26,12 @@ variable "ingress_cidr" {
   description = "CIDR para reglas de ingreso"
   type        = string
 }
+
+variable "ec2_specs" {
+  description = "parametros de la instancia EC2"
+  type = object({
+    ami           = string
+    instance_type = string
+    key_name      = string
+  })
+}

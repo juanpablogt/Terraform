@@ -13,3 +13,9 @@ tags = {
   IAC_version = "1.6.0"
 }
 ingress_cidr = "0.0.0.0/0"
+
+ec2_specs = {
+  ami           = "ami-0332d564d76dbd8d6"
+  instance_type = "t2.micro"
+  key_name      = "mykey"
+}
