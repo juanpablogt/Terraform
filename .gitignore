@@ -3,3 +3,7 @@
 *.tfstate
 *.tfstate.*
 .DS_Store
+*.log**/terraform-trace.log
+*.log
+*.log
+*.log
