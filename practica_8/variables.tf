@@ -35,3 +35,7 @@ variable "ec2_specs" {
     key_name      = string
   })
 }
+variable "enabled_monitoring" {
+  description = "Habilitar monitoreo para la instancia EC2"
+  type        = bool
+}

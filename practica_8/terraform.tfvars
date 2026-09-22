@@ -20,3 +20,5 @@ ec2_specs = {
   instance_type = "t2.micro"
   key_name      = "mykey"
 }
+
+enabled_monitoring = false
