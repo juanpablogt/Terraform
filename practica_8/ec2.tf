@@ -25,7 +25,6 @@ resource "aws_instance" "monitoring_instance" {
   subnet_id     = aws_subnet.public_subnet_virginia.id
   vpc_security_group_ids = [aws_security_group.public_instance_sg.id]
   user_data = file("script.sh")
-
   tags = {
     Name = "monitoreo"  
   }
