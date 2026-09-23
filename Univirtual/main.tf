@@ -90,6 +90,13 @@ resource "aws_security_group" "ec2_sg" {
   }
 
   ingress {
+    from_port   = 3389
+    to_port     = 3389
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -162,9 +169,24 @@ data "aws_ami" "ubuntu" {
   }
 }
 
+data "aws_ami" "windows_server" {
+  most_recent = true
+  owners      = ["801119661308"] # Amazon
+
+  filter {
+    name   = "name"
+    values = ["Windows_Server-2022-English-Full-Base-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
 resource "aws_instance" "power_bi_server" {
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = var.instance_type
+  ami                    = data.aws_ami.windows_server.id
+  instance_type          = var.power_bi_instance_type
   subnet_id              = aws_subnet.public[0].id
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 

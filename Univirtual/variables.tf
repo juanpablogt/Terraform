@@ -28,6 +28,12 @@ variable "instance_type" {
   default     = "t3.micro"
 }
 
+variable "power_bi_instance_type" {
+  description = "EC2 instance type for the Power BI Windows Server"
+  type        = string
+  default     = "t3.medium"
+}
+
 variable "db_name" {
   description = "RDS instance identifier"
   type        = string
