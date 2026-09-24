@@ -76,6 +76,46 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
+# NAT Gateway - outbound internet for private subnets
+resource "aws_eip" "nat" {
+  domain = "vpc"
+
+  tags = {
+    Name = "${var.project_name}-nat-eip"
+  }
+}
+
+resource "aws_nat_gateway" "main" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public[0].id
+
+  tags = {
+    Name = "${var.project_name}-nat"
+  }
+
+  depends_on = [aws_internet_gateway.main]
+}
+
+# Route Table - Private
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.main.id
+  }
+
+  tags = {
+    Name = "${var.project_name}-private-rt"
+  }
+}
+
+resource "aws_route_table_association" "private" {
+  count          = var.subnet_count
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private.id
+}
+
 # ==================== SECURITY GROUPS ====================
 resource "aws_security_group" "ec2_sg" {
   name        = "${var.project_name}-ec2-sg"
@@ -184,11 +224,36 @@ data "aws_ami" "windows_server" {
   }
 }
 
+# IAM role so the private Power BI server can be reached via SSM Session Manager
+resource "aws_iam_role" "power_bi_ssm" {
+  name = "${var.project_name}-power-bi-ssm-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "power_bi_ssm" {
+  role       = aws_iam_role.power_bi_ssm.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "power_bi" {
+  name = "${var.project_name}-power-bi-profile"
+  role = aws_iam_role.power_bi_ssm.name
+}
+
 resource "aws_instance" "power_bi_server" {
   ami                    = data.aws_ami.windows_server.id
   instance_type          = var.power_bi_instance_type
-  subnet_id              = aws_subnet.public[0].id
+  subnet_id              = aws_subnet.private[0].id
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+  iam_instance_profile   = aws_iam_instance_profile.power_bi.name
 
   tags = {
     Name = "power-bi-server"

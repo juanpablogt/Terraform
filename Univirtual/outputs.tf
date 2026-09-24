@@ -4,9 +4,9 @@ output "power_bi_server_id" {
   value       = aws_instance.power_bi_server.id
 }
 
-output "power_bi_server_public_ip" {
-  description = "Power BI Server Public IP"
-  value       = aws_instance.power_bi_server.public_ip
+output "power_bi_server_private_ip" {
+  description = "Power BI Server Private IP"
+  value       = aws_instance.power_bi_server.private_ip
 }
 
 output "email_server_id" {
