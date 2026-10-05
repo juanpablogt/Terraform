@@ -59,7 +59,7 @@ resource "aws_security_group" "public_instance_sg" {
   
 }
   ingress {
-    description = "SSH over Internet"
+    description = "HTTP over Internet"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -67,7 +67,7 @@ resource "aws_security_group" "public_instance_sg" {
   
 }
   ingress {
-    description = "SSH over Internet"
+    description = "HTTPS over Internet"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
