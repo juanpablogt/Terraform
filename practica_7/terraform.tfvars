@@ -20,3 +20,5 @@ ec2_specs = {
   instance_type = "t2.micro"
   key_name      = "mykey"
 }
+
+ingress_ports_list = [22, 80, 443]

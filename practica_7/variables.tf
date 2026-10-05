@@ -35,3 +35,7 @@ variable "ec2_specs" {
     key_name      = string
   })
 }
+variable "ingress_ports_list" {
+  description = "Lista de reglas de ingreso"
+  type = list(number)
+}
