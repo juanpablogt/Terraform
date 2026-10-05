@@ -1,6 +1,5 @@
-
-echo "Hello, World!" > /home/ec2-user/hello.txt
+#!/bin/bash
 yum update -y
-yum install -y httpd -y
-systemctl start httpd
-systemctl start apache2
+yum install -y httpd
+systemctl enable --now httpd
+

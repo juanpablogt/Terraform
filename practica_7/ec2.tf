@@ -38,4 +38,6 @@ resource "aws_instance" "mywebserver" {
   vpc_security_group_ids = [
     aws_security_group.public_instance_sg.id
   ]
+
+  user_data = file("${path.module}/script.sh")
 }
