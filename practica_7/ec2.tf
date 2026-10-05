@@ -28,7 +28,7 @@
 resource "aws_instance" "mywebserver" {
 
   ami                                  = "ami-0354c98ae10b02961"
-  instance_type                        = "t2.micro"
+  instance_type                        = "t3.micro"
   key_name                             = "mykey"
 
   subnet_id                            = aws_subnet.public_subnet_virginia.id

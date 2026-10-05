@@ -9,6 +9,7 @@ resource "aws_subnet" "public_subnet_virginia" {
   vpc_id                  = aws_vpc.VPC_virginia.id
   cidr_block              = var.subnets[0]
   map_public_ip_on_launch = true
+  availability_zone       = "us-east-1a"
   tags = {
     Name = "Public Subnet Virginia"
   }
