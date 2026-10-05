@@ -1,0 +1,216 @@
+═══════════════════════════════════════════════════════════════════════════════
+  LABORATORIO 4.1: Protección de Recursos de VPC con Grupos de Seguridad
+  IMPLEMENTACIÓN COMPLETA EN TERRAFORM
+═══════════════════════════════════════════════════════════════════════════════
+
+📦 ARCHIVOS DEL PROYECTO
+═════════════════════════════════════════════════════════════════════════════
+
+ARCHIVOS TERRAFORM (Infraestructura)
+────────────────────────────────────────────────────────────────────────────
+  ✓ main.tf                  [9.0 KB] - Configuración principal de VPC y recursos
+  ✓ variables.tf             [222 B]  - Definición de variables (región, tipo)
+  ✓ outputs.tf              [2.2 KB] - Salidas (IPs, IDs de seguridad)
+  ✓ terraform.tfvars         [50 B]  - Valores de variables
+
+SCRIPTS DE INICIALIZACIÓN (User Data)
+────────────────────────────────────────────────────────────────────────────
+  ✓ user_data_web.sh        [1.7 KB] - Configuración de web servers (Apache)
+  ✓ user_data_app.sh        [3.0 KB] - Configuración de app servers (Python)
+  ✓ user_data_db.sh         [2.0 KB] - Configuración de BD servers (MariaDB)
+
+DOCUMENTACIÓN
+────────────────────────────────────────────────────────────────────────────
+  ✓ README.md               [10 KB]  - Documentación completa del proyecto
+  ✓ QUICKSTART.md           [4.8 KB] - Guía rápida (5 minutos para empezar)
+  ✓ TESTING.md              [6.4 KB] - Casos de prueba y validación
+  ✓ SECURITY_GROUPS.md      [11 KB]  - Explicación detallada de seguridad
+  ✓ REFERENCE.md            [7.5 KB] - Referencia rápida de comandos
+  ✓ .gitignore              [909 B]  - Archivo para Git (excluir secrets)
+
+═════════════════════════════════════════════════════════════════════════════
+
+🎯 QUÉ CREA ESTE PROYECTO
+═════════════════════════════════════════════════════════════════════════════
+
+INFRAESTRUCTURA DE RED
+  • 1 VPC con CIDR 10.0.0.0/16
+  • 4 Subnets (2 públicas, 2 privadas) en diferentes Availability Zones
+  • 1 Internet Gateway (acceso desde internet)
+  • 1 NAT Gateway (salida de instancias privadas)
+  • 2 Tablas de rutas (pública y privada)
+
+GRUPOS DE SEGURIDAD
+  • Public-Web-SG: Permite SSH(22), HTTP(80), HTTPS(443) desde internet
+  • Private-App-SG: Permite puerto 8080 solo desde Web Servers
+  • Private-DB-SG: Permite MySQL(3306) y PostgreSQL(5432) solo desde Web Servers
+
+INSTANCIAS EC2
+  • Web-Server-1 (Pública, t2.micro) - Apache + HTML
+  • Web-Server-2 (Pública, t2.micro) - Apache + HTML
+  • App-Server-1 (Privada, t2.micro) - Servidor Python en puerto 8080
+  • App-Server-2 (Privada, t2.micro) - Servidor Python en puerto 8080
+  • DB-Server-1 (Privada, t2.micro) - MariaDB + Base de datos
+
+═════════════════════════════════════════════════════════════════════════════
+
+🚀 CÓMO EMPEZAR (3 PASOS)
+═════════════════════════════════════════════════════════════════════════════
+
+PASO 1: Inicializar Terraform
+  $ cd /home/claude
+  $ terraform init
+
+PASO 2: Revisar lo que se va a crear
+  $ terraform plan
+
+PASO 3: Aplicar la configuración
+  $ terraform apply
+  > Escribe "yes" cuando se pida confirmación
+
+LISTO! En 5-10 minutos tendrás la infraestructura creada.
+
+═════════════════════════════════════════════════════════════════════════════
+
+📋 DESPUÉS DE CREAR (Comandos Útiles)
+═════════════════════════════════════════════════════════════════════════════
+
+Ver todas las IPs y recursos creados:
+  $ terraform output
+
+Ver solo la IP pública del web server:
+  $ terraform output web_server_1_public_ip
+
+Ver todos los recursos en el estado:
+  $ terraform state list
+
+Ver detalles de un recurso específico:
+  $ terraform state show aws_instance.web_server_1
+
+═════════════════════════════════════════════════════════════════════════════
+
+🧪 PROBAR LA INFRAESTRUCTURA
+═════════════════════════════════════════════════════════════════════════════
+
+1. ACCEDER AL WEB SERVER:
+   $ curl http://<web-server-public-ip>
+
+2. HACER SSH A WEB SERVER:
+   $ ssh -i <clave.pem> ec2-user@<web-server-public-ip>
+
+3. DESDE WEB SERVER, CONECTAR A APP SERVER:
+   $ curl http://10.0.10.x:8080
+
+4. DESDE WEB SERVER, CONECTAR A BASE DE DATOS:
+   $ mysql -h 10.0.10.x -u appuser -p
+
+Para más detalles, ver TESTING.md
+
+═════════════════════════════════════════════════════════════════════════════
+
+💾 GUARDAR TU TRABAJO
+═════════════════════════════════════════════════════════════════════════════
+
+Exportar outputs para referencia:
+  $ terraform output -json > outputs.json
+
+Crear backup del estado:
+  $ cp terraform.tfstate terraform.tfstate.backup
+
+═════════════════════════════════════════════════════════════════════════════
+
+🧹 CUANDO TERMINES (Eliminar Recursos)
+═════════════════════════════════════════════════════════════════════════════
+
+Destruir toda la infraestructura (IMPORTANTE: evita gastos):
+  $ terraform destroy
+
+Esto eliminará:
+  • Todas las instancias EC2
+  • VPC y subnets
+  • Security groups
+  • Gateways y elastic IPs
+  • Todo lo que Terraform creó
+
+═════════════════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTACIÓN DISPONIBLE
+═════════════════════════════════════════════════════════════════════════════
+
+Lee estos archivos en orden para entender todo:
+
+1. README.md              ← Descripción general
+2. QUICKSTART.md          ← Cómo empezar rápido
+3. SECURITY_GROUPS.md     ← Explicación de seguridad
+4. TESTING.md             ← Cómo probar
+5. REFERENCE.md           ← Comandos y referencia
+6. ESTRUCTURA_PROYECTO.txt ← Este archivo
+
+═════════════════════════════════════════════════════════════════════════════
+
+💡 CONSEJOS
+═════════════════════════════════════════════════════════════════════════════
+
+✓ Siempre ejecuta 'terraform plan' antes de 'terraform apply'
+✓ Guarda los outputs en un archivo (terraform output -json > outputs.json)
+✓ Lee los archivos .md para entender la arquitectura
+✓ Ejecuta 'terraform destroy' cuando termines para evitar costos
+✓ Si algo falla, revisa los logs en CloudWatch
+
+═════════════════════════════════════════════════════════════════════════════
+
+❓ PREGUNTAS FRECUENTES
+═════════════════════════════════════════════════════════════════════════════
+
+P: ¿Cuánto cuesta?
+R: ~$0.055 USD/hora (~$1.32/día). Destruir cuando no uses.
+
+P: ¿Cuánto tiempo tarda en crear?
+R: 5-10 minutos después de 'terraform apply'
+
+P: ¿Por qué algunos servidores no tienen IP pública?
+R: Es seguridad - App y DB servers están en subnets privadas
+
+P: ¿Cómo acceso a los servidores privados?
+R: Conecta SSH al web server público, luego accede internamente
+
+P: ¿Qué pasa si ejecuto 'terraform apply' otra vez?
+R: Terraform compara y solo aplica cambios necesarios
+
+═════════════════════════════════════════════════════════════════════════════
+
+✅ RESUMEN
+═════════════════════════════════════════════════════════════════════════════
+
+Tienes una infraestructura AWS completa en Terraform que:
+
+✓ Crea una VPC con segmentación de red (pública/privada)
+✓ Implementa 3 grupos de seguridad con reglas restrictivas
+✓ Despliega 5 instancias EC2 preconfiguradas
+✓ Incluye NAT Gateway para salida de instancias privadas
+✓ Está completamente documentada
+✓ Es reutilizable y modificable
+
+TODO listo para el Laboratorio 4.1 de AWS Academy.
+
+═════════════════════════════════════════════════════════════════════════════
+
+🎓 PRÓXIMOS PASOS
+═════════════════════════════════════════════════════════════════════════════
+
+1. Lee README.md para entender la arquitectura
+2. Ejecuta 'terraform init' y 'terraform apply'
+3. Prueba la conectividad según TESTING.md
+4. Experimenta modificando los archivos .tf
+5. Elimina todo con 'terraform destroy'
+
+═════════════════════════════════════════════════════════════════════════════
+
+¡LISTO! Tu infraestructura Terraform está lista para usarse.
+
+Ejecuta ahora:
+  cd /home/claude
+  terraform init
+  terraform plan
+
+═════════════════════════════════════════════════════════════════════════════
