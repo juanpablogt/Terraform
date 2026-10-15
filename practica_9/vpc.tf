@@ -77,3 +77,16 @@ module "s3" {
 output "s3_bucket_arn" {
   value = module.s3.bucket_arn
 }
+module "terraform_state_backend" {
+  source = "cloudposse/tfstate-backend/aws"
+  version     = "0.38.1"
+  namespace  = "mnoExmple"
+  stage      = "prod"
+  name       = "terraform"
+  environment = "us-east-1"
+  attributes = ["state"]
+
+  terraform_backend_config_file_path = "."
+  terraform_backend_config_file_name = "backend.tf"
+  force_destroy                      = false
+}
